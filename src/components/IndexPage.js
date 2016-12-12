@@ -8,8 +8,6 @@ import axios from 'axios';
 // import athletes from '../models/athletes';
 // import TodoApp from './ticket_form';
 
-
-
 const Title = ({todoCount}) => {
   return (
     <div>
@@ -40,13 +38,18 @@ const TodoForm = ({addTodo}) => {
 
 const Todo = ({todo, remove}) => {
   // Each Todo
-  return (<a href="#" className="list-group-item" onClick={(todo) => {remove(todo.id)}}>{todo.text}</a>);
+  console.log("HERE"+ todo._id);
+  return (<a href="#" className="list-group-item" onClick={() => {
+  console.log("TODO:"+todo._id);
+  	remove(todo._id)}}>{todo.text}</a>);
 }
 
 const TodoList = ({todos, remove}) => {
   // Map through the todos
   const todoNode = todos.map((todo) => {
-    return (<Todo todo={todo} key={todo.id} remove={remove}/>)
+  	console.log("todoKEy: "+ todo._id);
+  	console.log("This"+ remove);
+    return (<Todo todo={todo} key={todo._id} remove={remove}/>)
   });
   return (<div className="list-group" style={{marginTop:'30px'}}>{todoNode}</div>);
 }
@@ -68,7 +71,6 @@ export default class IndexPage extends React.Component{
     // Make HTTP reques with Axios
     axios.get(this.apiUrl)
       .then((res) => {
-      	console.log(res.data.text);
         // Set state with result
         this.setState({data:res.data});
       });
@@ -82,7 +84,6 @@ export default class IndexPage extends React.Component{
   	    // Make HTTP reques with Axios
     axios.get(this.apiUrl)
       .then((res) => {
-      	console.log(res.data.text);
         // Set state with result
         this.setState({data:res.data});
       });
@@ -105,13 +106,15 @@ export default class IndexPage extends React.Component{
        .catch((error) =>{
        		console.log(error);
        });
+       this._fetchList();
   }
   // Handle remove
   handleRemove(id){
   	    console.log("id:"+id);
     // Filter all todos except the one to be removed
     const remainder = this.state.data.filter((todo) => {
-      if(todo.id !== id) return todo;
+    	console.log("R:"+todo._id);
+      if(todo._id !== id) return todo;
     });
 
     // Update state with filter

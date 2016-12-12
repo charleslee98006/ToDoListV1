@@ -100,16 +100,9 @@ app.post('/api/list', function(req, res) {
     if (err) {
       return console.log(err)
     }
-    db.collection('toDoLists').find().toArray(function(err, docs){
-          console.log(docs);
-          res.send(docs);
-    });
     console.log('saved to database')
-
   });
   //       // get and return all the todos after you create another
-
-      res.redirect('/')
   //   });
 });
 app.delete('/api/list/:id', function(req, res) {
@@ -119,10 +112,6 @@ app.delete('/api/list/:id', function(req, res) {
       return console.log(err)
     }
     res.send({message: "successfully deleted"});
-    //   db.collection('toDoLists').find().toArray(function(err, docs){
-    //       console.log(docs);
-    //       res.send(docs);
-    // });
   });
 });
 /**
