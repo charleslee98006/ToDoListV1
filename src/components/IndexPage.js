@@ -40,7 +40,7 @@ const TodoForm = ({addTodo}) => {
 
 const Todo = ({todo, remove}) => {
   // Each Todo
-  return (<a href="#" className="list-group-item" onClick={() => {remove(todo.id)}}>{todo.text}</a>);
+  return (<a href="#" className="list-group-item" onClick={(todo) => {remove(todo.id)}}>{todo.text}</a>);
 }
 
 const TodoList = ({todos, remove}) => {
@@ -61,34 +61,59 @@ export default class IndexPage extends React.Component{
     this.state = {
       data: []
     }
-    this.apiUrl = 'http://58447c176bd2d512006b23a8.mockapi.io/list'
+    this.apiUrl = '/api/list';
   }
   // Lifecycle method
   componentDidMount(){
     // Make HTTP reques with Axios
     axios.get(this.apiUrl)
       .then((res) => {
+      	console.log(res.data.text);
         // Set state with result
         this.setState({data:res.data});
       });
   }
+
+  componentWillMount(){
+  	this._fetchList();
+  }
+
+  _fetchList(){
+  	    // Make HTTP reques with Axios
+    axios.get(this.apiUrl)
+      .then((res) => {
+      	console.log(res.data.text);
+        // Set state with result
+        this.setState({data:res.data});
+      });
+  }
+
   // Add todo handler
   addTodo(val){
+  	console.log("Value: "+val);
     // Assemble data
-    const todo = {text: val}
+    let todo = {text: val};
+    console.log(todo);
     // Update data
+    console.log(this.apiUrl);
     axios.post(this.apiUrl, todo)
        .then((res) => {
+       	console.log(res);
           this.state.data.push(res.data);
           this.setState({data: this.state.data});
+       })
+       .catch((error) =>{
+       		console.log(error);
        });
   }
   // Handle remove
   handleRemove(id){
+  	    console.log("id:"+id);
     // Filter all todos except the one to be removed
     const remainder = this.state.data.filter((todo) => {
       if(todo.id !== id) return todo;
     });
+
     // Update state with filter
     axios.delete(this.apiUrl+'/'+id)
       .then((res) => {
@@ -104,8 +129,7 @@ export default class IndexPage extends React.Component{
         <TodoForm addTodo={this.addTodo.bind(this)}/>
         <TodoList
           todos={this.state.data}
-          remove={this.handleRemove.bind(this)}
-        />
+          remove={this.handleRemove.bind(this)}/>
       </div>
     );
   }
